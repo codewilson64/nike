@@ -19,7 +19,6 @@ export default function Card({
   image,
   title,
   category,
-  colors,
   price,
   width = 500,  // default width
   height = 500, // default height

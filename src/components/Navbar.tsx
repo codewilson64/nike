@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "@/app/zustand/useCartStore";
+import Image from "next/image";
 
 const GENDERS = [
   { label: "Men", slug: "men" },
@@ -27,9 +28,11 @@ export default function Navbar() {
           <Link
             href={'/'}
             className="flex-shrink-0">
-            <img
+            <Image
               src="/logo.svg"
               alt="Nike Logo"
+              width={100}
+              height={24}
               className="h-6 w-auto"
             />
           </Link>

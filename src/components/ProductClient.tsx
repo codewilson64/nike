@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Card from '@/components/Card'
-import ProductFilter from '@/components/ProductFilter'
+import ProductFilter from './ProductFilter'
 
 type Product = {
   id: string
@@ -15,7 +15,7 @@ type Product = {
 }
 
 export default function ProductClient({ initialProducts }: { initialProducts: Product[] }) {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts)
+  const [filteredProducts] = useState<Product[]>(initialProducts)
 
   return (
     <div className="flex flex-col md:flex-row gap-10">

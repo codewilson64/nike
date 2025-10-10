@@ -15,7 +15,7 @@ export async function filterProducts({
   color?: string
   priceRange?: string
 }) {
-  const where: any = {
+  const where: Prisma.ProductWhereInput = {
     isPublished: true,
   }
 
@@ -27,7 +27,7 @@ export async function filterProducts({
   }
 
   // ✅ Build variant filters safely
-  const variantConditions: any = {}
+  const variantConditions: Prisma.ProductVariantWhereInput = {}
 
   if (size) {
     variantConditions.size = { name: size }

@@ -25,13 +25,11 @@ type ProductDetailProps = {
 }
 
 export default function ProductDetail({
-  id,
   name,
   description,
   category,
   brand,
   gender,
-  images,
   variants,
 }: ProductDetailProps) {
   const [selectedVariant, setSelectedVariant] = useState(variants[0])

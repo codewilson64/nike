@@ -1,5 +1,6 @@
 'use client'
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
@@ -33,10 +34,13 @@ export default function HeroSection() {
 
         {/* Shoe Image (includes text already) */}
         <div className="relative">
-          <img
+          <Image
             src="/hero-shoe.png"
             alt="Nike Air Jordan"
-            className="w-[480px] sm:w-[560px] relative z-10"
+            width={560}
+            height={560}
+            priority
+            className="relative z-10 w-full h-auto"
           />
         </div>
       </div>
