@@ -1,7 +1,11 @@
 import ProductCard from '@/components/Card'
 import { fetchProductsByGender } from '@/lib/actions/products-actions'
 
-export default async function ProductPage({ params }: { params: { gender: string } }) {
+type ProductPageProps = {
+  params: { gender: string }
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
   const products = await fetchProductsByGender(params.gender)
 
   if (!products || products.length === 0) {
