@@ -99,6 +99,8 @@ model Product {
   variants        ProductVariant[]
   images          ProductImage[]
   wishlists       Wishlist[]
+
+  @@unique([name, brandId]) 
 }
 
 model Category {
@@ -136,6 +138,7 @@ model ProductVariant {
   colorId     String    @db.Uuid
   sizeId      String    @db.Uuid
   inStock     Int       @default(0)
+  imageUrl    String?
   weight      Float?
   dimensions  Json?
   createdAt   DateTime  @default(now())
@@ -152,7 +155,7 @@ model Color {
   id       String   @id @default(uuid()) @db.Uuid
   name     String
   slug     String   @unique
-  hexCode  String
+  hexCode  String?
   variants ProductVariant[]
 }
 

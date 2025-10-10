@@ -19,7 +19,7 @@ export default function ProductClient({ initialProducts }: { initialProducts: Pr
 
   return (
     <div className="flex flex-col md:flex-row gap-10">
-      <ProductFilter onResults={setFilteredProducts} />
+      {/* <ProductFilter onResults={setFilteredProducts} /> */}
 
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center flex-1">
         {filteredProducts.length === 0 ? (
@@ -28,6 +28,7 @@ export default function ProductClient({ initialProducts }: { initialProducts: Pr
           filteredProducts.map((product) => (
             <Card
               key={product.id}
+              id={product.id}
               image={product.image}
               title={product.title}
               category={product.category}

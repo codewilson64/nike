@@ -1,6 +1,6 @@
 import HeroSection from "@/components/Hero";
-import ProductGrid from "@/components/ProductGrid";
 import { getCurrentUser } from "@/lib/actions/auth-actions";
+import FrontProduct from "@/components/FrontProduct";
 
 export default async function Home() {
   const user = await getCurrentUser()
@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <main>
       <HeroSection />
-      <ProductGrid />
+      <FrontProduct />
     </main>
   );
 }

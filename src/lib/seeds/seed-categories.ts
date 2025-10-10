@@ -7,6 +7,7 @@ async function main() {
       { name: 'Shoes', slug: 'shoes' },
       { name: 'Running shoes', slug: 'running-shoes' },
       { name: 'Lifestyle', slug: 'lifestyle' },
+      { name: 'Kids', slug: 'kids' },
     ],
     skipDuplicates: true,
   })

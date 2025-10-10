@@ -66,7 +66,7 @@ export default function Footer() {
       {/* Bottom Section */}
       <div className="border-t border-gray-800 mt-6">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between text-sm text-gray-500">
-          <p>🌍 Croatia © 2025 Nike, Inc. All Rights Reserved</p>
+          <p>© 2025 Nike, Inc. All Rights Reserved</p>
           <div className="flex space-x-6 mt-2 sm:mt-0">
             <a href="#">Guides</a>
             <a href="#">Terms of Sale</a>

@@ -7,6 +7,7 @@ async function main() {
       { label: 'Men', slug: 'men' },
       { label: 'Women', slug: 'women' },
       { label: 'Unisex', slug: 'unisex' },
+      { label: 'Kids', slug: 'kids' },
     ],
     skipDuplicates: true,
   })

@@ -3,9 +3,20 @@
 import { useState } from "react";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useCartStore } from "@/app/zustand/useCartStore";
+
+const GENDERS = [
+  { label: "Men", slug: "men" },
+  { label: "Women", slug: "women" },
+  { label: "Kids", slug: "kids" },
+]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  // Access cart items from Zustand
+  const cart = useCartStore((state) => state.cart)
+  // Calculate total quantity
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
     <nav className="w-full border-b border-light-300 bg-dark-900 font-jost">
@@ -25,11 +36,15 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 text-body-medium text-light-200">
-            <a href="#" className="hover:text-light-100">Men</a>
-            <a href="#" className="hover:text-light-100">Women</a>
-            <a href="#" className="hover:text-light-100">Kids</a>
-            <a href="#" className="hover:text-light-100">Collections</a>
-            <a href="#" className="hover:text-light-100">Contact</a>
+            {GENDERS.map((gender) => (
+              <Link
+                key={gender.slug}
+                href={`/gender/${gender.slug}`}
+                className="hover:text-light-100"
+              >
+                {gender.label}
+              </Link>
+            ))}
           </div>
 
           {/* Right Section */}
@@ -37,17 +52,23 @@ export default function Navbar() {
             <button className="flex items-center gap-1 hover:text-light-100">
               <Search className="w-4 h-4" />
             </button>
-            <button className="flex items-center gap-1 hover:text-light-100">
-              <ShoppingCart className="w-4 h-4" />
-                (2)
-            </button>
+            <Link href={'/cart'}>
+              <button className="flex items-center gap-1 hover:text-light-100">
+                <ShoppingCart className="w-4 h-4" />
+                  {totalQuantity > 0 && (
+                  <span className="text-light-100">
+                    ({totalQuantity})
+                  </span>
+                )}
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-dark-900 hover:text-light-100"
+              className="text-light-100 hover:text-light-100"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -57,14 +78,20 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden px-4 pt-2 pb-3 space-y-2 text-body-medium text-dark-900">
-          <a href="#" className="block hover:text-light-100">Men</a>
-          <a href="#" className="block hover:text-light-100">Women</a>
-          <a href="#" className="block hover:text-light-100">Kids</a>
-          <a href="#" className="block hover:text-light-100">Collections</a>
-          <a href="#" className="block hover:text-light-100">Contact</a>
+        <div className="md:hidden px-4 pt-2 pb-3 space-y-2 text-body-medium text-light-100">
+          {GENDERS.map((gender) => (
+            <Link
+              key={gender.slug}
+              href={`/gender/${gender.slug}`}
+              className="block hover:text-light-100"
+            >
+              {gender.label}
+            </Link>
+          ))}
           <button className="block w-full text-left hover:text-light-100">Search</button>
-          <button className="block w-full text-left hover:text-light-100">My Cart (2)</button>
+          <button className="block w-full text-left hover:text-light-100">
+            My Cart {totalQuantity > 0 && `(${totalQuantity})`}
+          </button>
         </div>
       )}
     </nav>

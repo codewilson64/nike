@@ -19,14 +19,14 @@ export async function filterProducts({
     isPublished: true,
   }
 
-  // Gender filter
+  // ✅ Gender filter
   if (gender) {
     where.gender = {
       label: gender,
     }
   }
 
-  // Build variant filters
+  // ✅ Build variant filters safely
   const variantConditions: any = {}
 
   if (size) {
@@ -38,54 +38,41 @@ export async function filterProducts({
   }
 
   if (priceRange) {
-    let priceFilter: any = {}
-    switch (priceRange) {
-      case '0-50':
-        priceFilter = {
-          OR: [
-            { salePrice: { gte: new Prisma.Decimal(0), lte: new Prisma.Decimal(50) } },
-            { salePrice: null, price: { gte: new Prisma.Decimal(0), lte: new Prisma.Decimal(50) } },
-          ],
-        }
-        break
-      case '50-100':
-        priceFilter = {
-          OR: [
-            { salePrice: { gte: new Prisma.Decimal(50), lte: new Prisma.Decimal(100) } },
-            { salePrice: null, price: { gte: new Prisma.Decimal(50), lte: new Prisma.Decimal(100) } },
-          ],
-        }
-        break
-      case '100-150':
-        priceFilter = {
-          OR: [
-            { salePrice: { gte: new Prisma.Decimal(100), lte: new Prisma.Decimal(150) } },
-            { salePrice: null, price: { gte: new Prisma.Decimal(100), lte: new Prisma.Decimal(150) } },
-          ],
-        }
-        break
-      case '150+':
-        priceFilter = {
-          OR: [
-            { salePrice: { gte: new Prisma.Decimal(150) } },
-            { salePrice: null, price: { gte: new Prisma.Decimal(150) } },
-          ],
-        }
-        break
-      default:
-        priceFilter = {}
+    // normalize
+    const cleaned = priceRange.replace(/\$/g, '').replace(/\s/g, '').toLowerCase()
+
+    if (cleaned.includes('over') || cleaned.includes('+')) {
+      const num = parseFloat(cleaned.replace(/[^0-9.]/g, ''))
+      // check salePrice or price
+      variantConditions.OR = [
+        { salePrice: { gt: new Prisma.Decimal(num) } },
+        { price: { gt: new Prisma.Decimal(num) } },
+      ]
+    } else if (cleaned.includes('-')) {
+      const [min, max] = cleaned.split('-').map(Number)
+      variantConditions.OR = [
+        {
+          salePrice: {
+            gte: new Prisma.Decimal(min),
+            lte: new Prisma.Decimal(max),
+          },
+        },
+        {
+          price: {
+            gte: new Prisma.Decimal(min),
+            lte: new Prisma.Decimal(max),
+          },
+        },
+      ]
     }
-    variantConditions.AND = variantConditions.AND
-      ? [...variantConditions.AND, priceFilter]
-      : [priceFilter]
   }
 
-  // Apply variants.some only if there are variant conditions
+  // ✅ Apply variants.some only if something to filter
   if (Object.keys(variantConditions).length > 0) {
     where.variants = { some: variantConditions }
   }
 
-  // Query products
+  // ✅ Query products
   const products = await prisma.product.findMany({
     where,
     orderBy: { createdAt: 'desc' },
@@ -103,7 +90,7 @@ export async function filterProducts({
     },
   })
 
-  // Format output
+  // ✅ Format output
   return products.map((p) => ({
     id: p.id,
     image: p.images?.[0]?.url || '/placeholder.png',
