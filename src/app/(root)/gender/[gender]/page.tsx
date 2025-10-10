@@ -1,11 +1,16 @@
 import ProductCard from '@/components/Card'
 import { fetchProductsByGender } from '@/lib/actions/products-actions'
+import { NextPage } from 'next';
 
-type ProductPageProps = {
-  params: { gender: string }
+type Params = {
+  gender: string;
+};
+
+interface ProductPageProps {
+  params: Params;
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
+const ProductPage: NextPage<ProductPageProps> = async ({ params }) => {
   const products = await fetchProductsByGender(params.gender)
 
   if (!products || products.length === 0) {
@@ -38,3 +43,5 @@ export default async function ProductPage({ params }: ProductPageProps) {
     </section>
   )
 }
+
+export default ProductPage
