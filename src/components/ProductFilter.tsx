@@ -4,7 +4,16 @@ import { useState, useTransition } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { filterProducts } from '@/lib/actions/filterProducts'
 
-export default function ProductFilter({ onResults }: { onResults: (products: any[]) => void }) {
+interface ProductCard {
+  id: string
+  image: string
+  title: string
+  category: string
+  colors: number
+  price: string
+}
+
+export default function ProductFilter({ onResults }: { onResults: (products: ProductCard[]) => void }) {
   const [gender, setGender] = useState<string>('')
   const [size, setSize] = useState<string>('')
   const [color, setColor] = useState<string>('')

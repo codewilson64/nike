@@ -6,7 +6,7 @@ export default function SignInPage() {
   return (
     <div>
       <p className="text-right text-sm text-gray-600">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/sign-up" className="font-medium text-black">
           Sign Up
         </Link>

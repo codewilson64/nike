@@ -46,12 +46,12 @@ export default function Footer() {
 
         {/* Kids */}
         <div>
-          <h4 className="text-white font-semibold mb-3">Kids'</h4>
+          <h4 className="text-white font-semibold mb-3">Kids</h4>
           <ul className="space-y-2">
             <li>Infant & Toddler Shoes</li>
-            <li>Kids' Shoes</li>
-            <li>Kids' Jordan Shoes</li>
-            <li>Kids' Basketball Shoes</li>
+            <li>Kids Shoes</li>
+            <li>Kids Jordan Shoes</li>
+            <li>Kids Basketball Shoes</li>
           </ul>
         </div>
 
