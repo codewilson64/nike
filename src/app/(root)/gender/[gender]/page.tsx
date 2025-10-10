@@ -1,17 +1,9 @@
 import ProductCard from '@/components/Card'
 import { fetchProductsByGender } from '@/lib/actions/products-actions'
-import { NextPage } from 'next';
 
-type Params = {
-  gender: string;
-};
-
-interface ProductPageProps {
-  params: Params;
-}
-
-const ProductPage: NextPage<ProductPageProps> = async ({ params }) => {
-  const products = await fetchProductsByGender(params.gender)
+export default async function ProductPage({ params }: { params: Promise<{ gender: string }> }) {
+  const { gender } = await params
+  const products = await fetchProductsByGender(gender)
 
   if (!products || products.length === 0) {
     return (
@@ -24,7 +16,7 @@ const ProductPage: NextPage<ProductPageProps> = async ({ params }) => {
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-heading-3 text-dark-900 mb-6 capitalize">
-        {params.gender} Collection
+        {gender} Collection
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center">
@@ -43,5 +35,3 @@ const ProductPage: NextPage<ProductPageProps> = async ({ params }) => {
     </section>
   )
 }
-
-export default ProductPage
