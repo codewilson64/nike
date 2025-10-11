@@ -4,7 +4,7 @@ import ProductFilter from './ProductFilter'
 import SortBy from './SortBy'
 
 import Card from './Card'
-import { filterProducts } from '@/lib/actions/filterProducts'
+import { filterProducts } from 'lib/actions/filterProducts'
 
 type Product = {
   id: string

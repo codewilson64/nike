@@ -1,4 +1,4 @@
-import { fetchAllProducts } from "@/lib/actions/products-actions";
+import { fetchAllProducts } from "lib/actions/products-actions";
 import ProductCard from "./Card";
 
 export default async function FrontProduct() {

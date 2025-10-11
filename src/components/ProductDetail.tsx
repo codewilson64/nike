@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import Image from 'next/image'
-import { useCartStore } from '@/app/zustand/useCartStore'
+import { useCartStore } from 'app/zustand/useCartStore'
 
 type ProductDetailProps = {
   id: string

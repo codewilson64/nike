@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Menu, X, Search, ShoppingCart, CircleUserRound, LogOut } from "lucide-react";
 import Link from "next/link";
-import { useCartStore } from "@/app/zustand/useCartStore";
+import { useCartStore } from "app/zustand/useCartStore";
 
 const NavLinks = [
   { label: "Collection", href: "/products" },

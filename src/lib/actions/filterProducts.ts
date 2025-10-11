@@ -1,6 +1,6 @@
 'use server'
 
-import { Prisma, PrismaClient } from "@/generated/prisma"
+import { Prisma, PrismaClient } from "generated/prisma"
 
 const prisma = new PrismaClient()
 
