@@ -1,6 +1,6 @@
-import HeroSection from "@/components/Hero";
-import { getCurrentUser } from "@/lib/actions/auth-actions";
-import FrontProduct from "@/components/FrontProduct";
+import HeroSection from "components/Hero";
+import { getCurrentUser } from "lib/actions/auth-actions";
+import FrontProduct from "components/FrontProduct";
 
 export default async function Home() {
   const user = await getCurrentUser()

@@ -1,5 +1,5 @@
-import ProductCard from '@/components/Card'
-import { fetchProductsByGender } from '@/lib/actions/products-actions'
+import ProductCard from 'components/Card'
+import { fetchProductsByGender } from 'lib/actions/products-actions'
 
 export default async function ProductPage({ params }: { params: Promise<{ gender: string }> }) {
   const { gender } = await params
