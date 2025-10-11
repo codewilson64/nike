@@ -1,5 +1,6 @@
 'use server'
 
+import { redirect } from 'next/navigation'
 import { auth } from '../auth'
 import { headers } from 'next/headers'
 
@@ -30,7 +31,7 @@ export const signIn = async (email: string, password: string ) => {
   return response
 }
 
-// get user session
+// get user session // code from JS Mastery video 
 export const getCurrentUser = async () => {
   try {
     const session = await auth.api.getSession({
@@ -45,7 +46,6 @@ export const getCurrentUser = async () => {
 
 // sign out
 export const signOut = async () => {
-  const response = await auth.api.signOut({headers: await headers()})
-
-  return response
+  await auth.api.signOut({headers: await headers()})
+  redirect('/')
 }

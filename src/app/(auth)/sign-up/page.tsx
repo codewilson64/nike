@@ -25,14 +25,14 @@ export default function SignUpPage() {
 
   return (
     <div>
-      <p className="text-right text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600">
         Already have an account?{" "}
         <Link href="/sign-in" className="font-medium text-black">
           Sign In
         </Link>
       </p>
-      <h1 className="mt-6 text-2xl font-bold">Join Nike Today!</h1>
-      <p className="text-sm text-gray-500 mb-6">
+      <h1 className="text-center mt-6 text-2xl font-bold">Join Nike Today!</h1>
+      <p className="text-center text-sm text-gray-500 mb-6">
         Create your account to start your fitness journey
       </p>
 

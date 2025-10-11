@@ -1,18 +1,29 @@
 'use client'
 
 import { useState } from "react";
-import { Menu, X, Search, ShoppingCart } from "lucide-react";
+import { Menu, X, Search, ShoppingCart, CircleUserRound, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "@/app/zustand/useCartStore";
-import Image from "next/image";
 
-const GENDERS = [
-  { label: "Men", slug: "men" },
-  { label: "Women", slug: "women" },
-  { label: "Kids", slug: "kids" },
+const NavLinks = [
+  { label: "Collection", href: "/products" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ]
 
-export default function Navbar() {
+type User = {
+  id: string
+  email: string
+  emailVerified: boolean
+  name: string
+  createdAt: Date
+  updatedAt: Date
+  image?: string | null
+} | null
+
+type Logout = () => Promise<void>
+
+export default function Navbar({ user, logout }: { user: User; logout: Logout }) {
   const [isOpen, setIsOpen] = useState(false);
   // Access cart items from Zustand
   const cart = useCartStore((state) => state.cart)
@@ -25,27 +36,26 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           
           {/* Logo */}
-          <Link
-            href={'/'}
-            className="flex-shrink-0">
-            <Image
+          <Link href={'/'} className="flex-shrink-0 text-2xl font-extrabold text-light-100">
+            {/* <Image
               src="/logo.svg"
               alt="Nike Logo"
               width={100}
               height={24}
               className="h-6 w-auto"
-            />
+            /> */}
+              STEPFUEL
           </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-8 text-body-medium text-light-200">
-            {GENDERS.map((gender) => (
+            {NavLinks.map((link) => (
               <Link
-                key={gender.slug}
-                href={`/gender/${gender.slug}`}
+                key={link.label}
+                href={link.href}
                 className="hover:text-light-100"
               >
-                {gender.label}
+                {link.label}
               </Link>
             ))}
           </div>
@@ -65,6 +75,19 @@ export default function Navbar() {
                 )}
               </button>
             </Link>
+            {user ? (
+              <form action={logout}>
+                <button className="flex items-center gap-1 hover:text-light-100" type="submit">
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </form>
+            ) : (
+              <Link href="/sign-in">
+                <button className="flex items-center gap-1 hover:text-light-100">
+                  <CircleUserRound className="w-4 h-4" />
+                </button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -82,19 +105,21 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden px-4 pt-2 pb-3 space-y-2 text-body-medium text-light-100">
-          {GENDERS.map((gender) => (
+          {NavLinks.map((link) => (
             <Link
-              key={gender.slug}
-              href={`/gender/${gender.slug}`}
+              key={link.label}
+              href={link.href}
               className="block hover:text-light-100"
             >
-              {gender.label}
+              {link.label}
             </Link>
           ))}
-          <button className="block w-full text-left hover:text-light-100">Search</button>
-          <button className="block w-full text-left hover:text-light-100">
+          <Link href="/sign-in" className="block w-full text-left hover:text-light-100">
+              Account
+          </Link>
+          <Link href='/cart' className="block w-full text-left hover:text-light-100">
             My Cart {totalQuantity > 0 && `(${totalQuantity})`}
-          </button>
+          </Link>
         </div>
       )}
     </nav>

@@ -1,6 +1,7 @@
 import "../globals.css";
 import Image from "next/image";
 import logo from "../../../public/logo.svg";
+import Link from "next/link";
 
 export default function AuthLayout({
   children,
@@ -12,9 +13,9 @@ export default function AuthLayout({
         <div className="flex h-full flex-col lg:flex-row">
           {/* Left Panel */}
           <div className="hidden lg:flex lg:w-1/2 bg-black text-white flex-col justify-between p-10">
-            <div>
+            <Link href={'/'}>
               <Image src={logo} alt="Nike Logo" width={40} height={40} />
-            </div>
+            </Link>
             <div className="px-6">
               <h2 className="text-4xl font-bold mb-4">Just Do It</h2>
               <p className="text-lg text-gray-300">

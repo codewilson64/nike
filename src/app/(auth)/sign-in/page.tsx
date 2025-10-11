@@ -5,14 +5,14 @@ import Link from "next/link";
 export default function SignInPage() {
   return (
     <div>
-      <p className="text-right text-sm text-gray-600">
+      <p className="text-center text-sm text-gray-600">
         Don&apos;t have an account?{" "}
         <Link href="/sign-up" className="font-medium text-black">
           Sign Up
         </Link>
       </p>
-      <h1 className="mt-6 text-2xl font-bold">Welcome Back</h1>
-      <p className="text-sm text-gray-500 mb-6">
+      <h1 className="text-center mt-6 text-2xl font-bold">Welcome Back</h1>
+      <p className="text-center text-sm text-gray-500 mb-6">
         Sign in to continue your fitness journey
       </p>
 
