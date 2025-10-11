@@ -2,8 +2,9 @@
 import { useState, useTransition, useEffect } from 'react'
 import ProductFilter from './ProductFilter'
 import SortBy from './SortBy'
-import { filterProducts } from '@/lib/actions/filterProducts'
+
 import Card from './Card'
+import { filterProducts } from '@/lib/actions/filterProducts'
 
 type Product = {
   id: string

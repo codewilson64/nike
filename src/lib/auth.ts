@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma"
-import { PrismaClient } from "@/generated/prisma"
+import { PrismaClient } from "../../src/generated/prisma"
 import { nextCookies } from 'better-auth/next-js'
 import { v4 as uuidv4 } from 'uuid'
 

@@ -1,8 +1,6 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
 import { ChevronDown } from 'lucide-react'
-import { filterProducts } from '@/lib/actions/filterProducts'
 
 interface ProductFilterProps {
   gender: string

@@ -1,6 +1,7 @@
 'use server'
 
-import { PrismaClient, Prisma } from '@/generated/prisma'
+import { Prisma, PrismaClient } from "../../../src/generated/prisma"
+
 const prisma = new PrismaClient()
 
 export async function filterProducts({
