@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { Trash2, Minus, Plus } from 'lucide-react'
-import { useCartStore } from '@/app/zustand/useCartStore'
+import { useCartStore } from 'app/zustand/useCartStore'
 
 export default function CartPage() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } =
