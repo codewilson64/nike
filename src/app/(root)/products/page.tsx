@@ -1,5 +1,5 @@
-import ProductControls from '@/components/ProductControls'
-import { fetchAllProducts } from '@/lib/actions/products-actions'
+import ProductControls from 'components/ProductControls'
+import { fetchAllProducts } from 'lib/actions/products-actions'
 
 export default async function ProductsPage() {
   const products = await fetchAllProducts()

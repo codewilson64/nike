@@ -1,7 +1,7 @@
 
-import ProductDetail from '@/components/ProductDetail'
-import ProductCard from '@/components/Card'
-import { fetchSuggestedProducts, getProductById } from '@/lib/actions/products-actions'
+import ProductDetail from 'components/ProductDetail'
+import ProductCard from 'components/Card'
+import { fetchSuggestedProducts, getProductById } from 'lib/actions/products-actions'
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
