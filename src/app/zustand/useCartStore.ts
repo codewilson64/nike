@@ -1,6 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 type CartItem = {
   id: string
@@ -22,46 +23,49 @@ type CartStore = {
   clearCart: () => void
 }
 
-export const useCartStore = create<CartStore>((set) => ({
+export const useCartStore = create<CartStore>()(persist((set, get) => ({
   cart: [],
 
-  addToCart: (item) =>
-    set((state) => {
-      const existingItem = state.cart.find(
-        (i) => i.id === item.id && i.size === item.size
-      )
-      if (existingItem) {
-        return {
-          cart: state.cart.map((i) =>
-            i.id === item.id && i.size === item.size
-              ? { ...i, quantity: i.quantity + item.quantity }
-              : i
-          ),
-        }
-      }
-      return { cart: [...state.cart, item] }
-    }),
-
-  removeFromCart: (id) =>
-    set((state) => ({
-      cart: state.cart.filter((i) => i.id !== id),
-    })),
-
-  increaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart.map((i) =>
-        i.id === id ? { ...i, quantity: i.quantity + 1 } : i
-      ),
-    })),
-
-  decreaseQuantity: (id) =>
-    set((state) => ({
-      cart: state.cart
-        .map((i) =>
-          i.id === id ? { ...i, quantity: Math.max(1, i.quantity - 1) } : i
+      addToCart: (item) => {
+        const existingItem = get().cart.find(
+          (i) => i.id === item.id && i.size === item.size
         )
-        .filter((i) => i.quantity > 0),
-    })),
+        if (existingItem) {
+          set({
+            cart: get().cart.map((i) =>
+              i.id === item.id && i.size === item.size
+                ? { ...i, quantity: i.quantity + item.quantity }
+                : i
+            ),
+          })
+        } else {
+          set({ cart: [...get().cart, item] })
+        }
+      },
 
-  clearCart: () => set({ cart: [] }),
-}))
+      removeFromCart: (id) =>
+        set({ cart: get().cart.filter((i) => i.id !== id) }),
+
+      increaseQuantity: (id) =>
+        set({
+          cart: get().cart.map((i) =>
+            i.id === id ? { ...i, quantity: i.quantity + 1 } : i
+          ),
+        }),
+
+      decreaseQuantity: (id) =>
+        set({
+          cart: get()
+            .cart.map((i) =>
+              i.id === id ? { ...i, quantity: Math.max(1, i.quantity - 1) } : i
+            )
+            .filter((i) => i.quantity > 0),
+        }),
+
+      clearCart: () => set({ cart: [] }),
+    }),
+    {
+      name: 'guest-cart', // key name in localStorage
+    }
+  )
+)

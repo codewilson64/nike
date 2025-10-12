@@ -35,6 +35,7 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String   @db.Uuid
+  
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("session")

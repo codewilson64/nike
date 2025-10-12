@@ -5,13 +5,14 @@ import { Trash2, Minus, Plus } from 'lucide-react'
 import { useCartStore } from 'app/zustand/useCartStore'
 
 export default function CartPage() {
-  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } =
-    useCartStore()
+  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCartStore()
 
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity, 0)
   const delivery = 2
   const total = subtotal + delivery
+
+  console.log("Cart: ",cart)
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">

@@ -1,8 +1,49 @@
 "use client"
 
+import { signIn } from "lib/actions/auth-actions";
+import { syncGuestCart } from "lib/actions/cart-actions";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+type GuestCartItem = {
+  id: string             
+  name: string            
+  price: number          
+  size: string             
+  quantity: number      
+}
 
 export default function SignInPage() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const router = useRouter()
+
+  const handleSignin = async (e: React.FormEvent) => {
+    e.preventDefault()
+      try {
+        const response = await signIn(email, password)
+        if(response.user) {
+          const guestData = JSON.parse(localStorage.getItem('guest-cart') || '{}')
+          const guestCartItems = guestData?.state?.cart || []
+          
+          if (guestCartItems.length > 0) {
+            // map your guest items into backend-compatible format
+            const formattedCart = guestCartItems.map((item: GuestCartItem) => ({
+              productVariantId: item.id, // assuming your localStorage id matches ProductVariant id
+              quantity: item.quantity,
+            }))
+          
+            await syncGuestCart(formattedCart)
+            localStorage.removeItem('guest-cart')
+          }
+          router.push('/')
+        }
+      } catch (error) {
+        console.log("Error", error)
+      }
+  }
+
   return (
     <div>
       <p className="text-center text-sm text-gray-600">
@@ -31,12 +72,14 @@ export default function SignInPage() {
         <hr className="flex-1 border-gray-300" />
       </div>
 
-      <form className="space-y-4">
+      <form onSubmit={handleSignin} className="space-y-4">
         <div>
           <label className="text-sm font-medium">Email</label>
           <input
             type="email"
             placeholder="johndoe@gmail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-black"
           />
         </div>
@@ -45,6 +88,8 @@ export default function SignInPage() {
           <input
             type="password"
             placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-black"
           />
         </div>

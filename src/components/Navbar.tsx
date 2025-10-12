@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCartStore } from "app/zustand/useCartStore";
 
 const NavLinks = [
+  { label: "Home", href: "/" },
   { label: "Collection", href: "/products" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -21,9 +22,7 @@ type User = {
   image?: string | null
 } | null
 
-type Logout = () => Promise<void>
-
-export default function Navbar({ user, logout }: { user: User; logout: Logout }) {
+export default function Navbar({ user }: { user: User }) {
   const [isOpen, setIsOpen] = useState(false);
   // Access cart items from Zustand
   const cart = useCartStore((state) => state.cart)
@@ -75,19 +74,12 @@ export default function Navbar({ user, logout }: { user: User; logout: Logout })
                 )}
               </button>
             </Link>
-            {user ? (
-              <form action={logout}>
-                <button className="flex items-center gap-1 hover:text-light-100" type="submit">
-                  <LogOut className="w-4 h-4" />
-                </button>
-              </form>
-            ) : (
-              <Link href="/sign-in">
-                <button className="flex items-center gap-1 hover:text-light-100">
-                  <CircleUserRound className="w-4 h-4" />
-                </button>
-              </Link>
-            )}
+
+            <Link href={user ? "/profile" : "/sign-in"}>
+              <button className="flex items-center gap-1 hover:text-light-100">
+                <CircleUserRound className="w-4 h-4" />
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -114,7 +106,7 @@ export default function Navbar({ user, logout }: { user: User; logout: Logout })
               {link.label}
             </Link>
           ))}
-          <Link href="/sign-in" className="block w-full text-left hover:text-light-100">
+          <Link href={user ? "/profile" : "/sign-in"} className="block w-full text-left hover:text-light-100">
               Account
           </Link>
           <Link href='/cart' className="block w-full text-left hover:text-light-100">
