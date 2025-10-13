@@ -3,7 +3,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useCartStore } from 'app/zustand/useCartStore'
-import { createGuestSession, checkGuestSession, addGuestCartItem } from 'lib/actions/auth-actions'
+import { createGuestSession, checkGuestSession } from 'lib/actions/auth-actions'
+import { addGuestCartItem } from 'lib/actions/cart-actions'
 
 type ProductDetailProps = {
   id: string
@@ -80,6 +81,14 @@ export default function ProductDetail({
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size)
+    
+    const matchingVariant = variants.find(
+    (v) => v.color === selectedVariant.color && v.size === size
+  )
+    if (matchingVariant) {
+      setSelectedVariant(matchingVariant)
+      setMainImage(matchingVariant.imageUrl)
+    }
   }
 
   return (
