@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useCartStore } from 'app/zustand/useCartStore'
+import { createGuestSession, checkGuestSession } from 'lib/actions/auth-actions'
 
 type ProductDetailProps = {
   id: string
@@ -38,8 +39,22 @@ export default function ProductDetail({
 
   const addToCart = useCartStore((state) => state.addToCart)
 
-  const handleAddToCart = () => {
+  async function checkOrCreateGuestSession() {
+    const data = await checkGuestSession();
+    if(data.sessionToken) console.log("Guest session exist", data)
+
+    if (!data.sessionToken) {
+      console.log("Guest session does not exist, creating guest session token")
+      const newData = await createGuestSession();
+      return newData.sessionToken;
+    }
+    return data.sessionToken;
+  }
+
+  const handleAddToCart = async () => {
     if (!selectedSize) return
+    await checkOrCreateGuestSession();
+
     addToCart({
       id: selectedVariant.id,
       name,
