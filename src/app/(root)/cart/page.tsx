@@ -4,6 +4,8 @@ import Image from 'next/image'
 import { Trash2, Minus, Plus } from 'lucide-react'
 import { useCartStore } from 'app/zustand/useCartStore'
 import { addGuestCartItem, decreaseGuestCartItem, removeCartItem } from 'lib/actions/cart-actions'
+import CartTotals from 'components/CartTotals'
+import Link from 'next/link'
 
 export default function CartPage() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCartStore()
@@ -16,7 +18,7 @@ export default function CartPage() {
   console.log("Cart: ",cart)
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-10">
       {/* Cart Items */}
       <div className="lg:col-span-2 space-y-8">
         <h2 className="text-heading-3 text-dark-900 mb-4">Your bag</h2>
@@ -102,7 +104,7 @@ export default function CartPage() {
       </div>
 
       {/* Summary */}
-      <div className="bg-white shadow-sm rounded-2xl p-6 h-fit sticky top-4">
+      <div className="lg:col-span-2 bg-white shadow-sm rounded-2xl p-6 h-fit sticky top-4">
         <h2 className="text-lg font-semibold mb-6">Summary</h2>
 
         <div className="flex justify-between text-gray-700 mb-2 text-sm sm:text-base">
@@ -122,9 +124,11 @@ export default function CartPage() {
           <span>${total.toFixed(2)}</span>
         </div>
 
-        <button className="mt-6 w-full bg-black text-white py-3 rounded-full hover:bg-gray-900 transition text-sm sm:text-base">
-          Proceed to Checkout
-        </button>
+        <Link href={'/checkouts'}>
+          <button className="mt-6 w-full bg-black text-white py-3 rounded-full hover:bg-gray-900 transition text-sm sm:text-base">
+            Proceed to Checkout
+          </button>
+        </Link>
       </div>
     </div>
   )

@@ -176,4 +176,51 @@ export const removeCartItem = async (productVariantId: string) => {
   }
 }
 
+export const getGuestCartItems = async () => {
+  const cookieStore = await cookies()
+  const sessionToken = cookieStore.get('guest_session')?.value
+
+  if (!sessionToken) {
+    return { ok: false, message: 'No guest session found', items: [] }
+  }
+
+  const guest = await prisma.guest.findUnique({
+    where: { sessionToken },
+    include: {
+      carts: {
+        include: {
+          items: {
+            include: {
+              variant: {
+                include: {
+                  product: true,
+                  color: true,
+                  size: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+
+  if (!guest || guest.carts.length === 0) {
+    return { ok: true, items: [] }
+  }
+
+  const items = guest.carts[0].items.map((item) => ({
+    id: item.id,
+    quantity: item.quantity,
+    price: Number(item.variant.salePrice) ?? item.variant.price,
+    name: item.variant.product.name,
+    category: item.variant.product.categoryId,
+    size: item.variant.size.name,
+    color: item.variant.color.name,
+    image: item.variant.imageUrl || '/placeholder.png',
+  }))
+
+  return { ok: true, items }
+}
+
 
