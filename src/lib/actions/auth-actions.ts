@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: true,
-  sameSite: "strict",
+  sameSite: "strict" as const,
   path: "/",
   maxAge: 60 * 60 * 24 * 7, 
 };
@@ -47,8 +47,8 @@ export const createGuestSession = async () => {
 
 // Check Guest session
 export const checkGuestSession = async () => {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("guest_session")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("guest_session")?.value;
 
   if (!token) {
     return { sessionToken: null };
@@ -75,7 +75,7 @@ export const checkGuestSession = async () => {
 
 // Migrate guest to user
 export const migrateGuestToUser = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get("guest_session")?.value;
   if (!token) return
 

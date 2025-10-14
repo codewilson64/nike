@@ -56,7 +56,7 @@ export async function syncGuestCart(cartItems: CartItemProps[]) {
 }
 
 export const addGuestCartItem = async (productVariantId: string, quantity: number) => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionToken = cookieStore.get("guest_session")?.value;
 
   if (!sessionToken) {
@@ -110,4 +110,70 @@ export const addGuestCartItem = async (productVariantId: string, quantity: numbe
 
   return { ok: true, message: "Item added to guest cart." };
 }
+
+export const decreaseGuestCartItem = async (productVariantId: string) => {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("guest_session")?.value;
+
+  if (!sessionToken) throw new Error("Guest session not found.");
+
+  const guest = await prisma.guest.findUnique({ where: { sessionToken } });
+  if (!guest) throw new Error("Guest not found for this session.");
+
+  const cart = await prisma.cart.findFirst({ where: { guestId: guest.id } });
+  if (!cart) return;
+
+  const existingItem = await prisma.cartItem.findFirst({
+    where: { cartId: cart.id, productVariantId },
+  });
+
+  if (!existingItem) return;
+
+  if (existingItem.quantity > 1) {
+    await prisma.cartItem.update({
+      where: { id: existingItem.id },
+      data: { quantity: existingItem.quantity - 1 },
+    });
+  } else {
+    await prisma.cartItem.delete({
+      where: { id: existingItem.id },
+    });
+  }
+
+  return { ok: true };
+};
+
+export const removeCartItem = async (productVariantId: string) => {
+  try {
+    const cookieStore = await cookies()
+    const sessionToken = cookieStore.get('guest_session')?.value
+
+    if (!sessionToken) throw new Error('No guest session found')
+
+    const guest = await prisma.guest.findUnique({
+      where: { sessionToken },
+    })
+
+    if (!guest) throw new Error('Guest not found')
+
+    const cart = await prisma.cart.findFirst({ where: { guestId: guest.id } });
+    if (!cart) return;
+
+    const existingItem = await prisma.cartItem.findFirst({
+      where: { cartId: cart.id, productVariantId },
+    })
+
+    if (!existingItem) return;
+
+    await prisma.cartItem.deleteMany({
+      where: { id: existingItem.id },
+    })
+
+    return { ok: true }
+  } catch (error) {
+    console.error('❌ Failed to remove item:', error)
+    return { ok: false, error: (error as Error).message }
+  }
+}
+
 

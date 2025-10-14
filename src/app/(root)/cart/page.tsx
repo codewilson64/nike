@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { Trash2, Minus, Plus } from 'lucide-react'
 import { useCartStore } from 'app/zustand/useCartStore'
+import { addGuestCartItem, decreaseGuestCartItem, removeCartItem } from 'lib/actions/cart-actions'
 
 export default function CartPage() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCartStore()
@@ -46,14 +47,28 @@ export default function CartPage() {
 
                   <div className="flex items-center gap-3 mt-3 border rounded-full w-fit px-3 py-1">
                     <button
-                      onClick={() => decreaseQuantity(item.id)}
+                      onClick={async () => {
+                        decreaseQuantity(item.id)
+                        try {
+                          await decreaseGuestCartItem(item.id)
+                        } catch (err) {
+                          console.error("Failed to decrease guest cart:", err)
+                        }
+                      }}
                       className="p-1"
                     >
                       <Minus className="w-4 h-4" />
                     </button>
                     <span className="text-sm">{item.quantity}</span>
                     <button
-                      onClick={() => increaseQuantity(item.id)}
+                      onClick={async () => {
+                        increaseQuantity(item.id) 
+                        try {
+                          await addGuestCartItem(item.id, 1) 
+                        } catch (err) {
+                          console.error("Failed to update guest cart:", err)
+                        }
+                      }}
                       className="p-1"
                     >
                       <Plus className="w-4 h-4" />
@@ -68,7 +83,14 @@ export default function CartPage() {
                   ${(item.price * item.quantity).toFixed(2)}
                 </p>
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={async () => {
+                    removeFromCart(item.id) 
+                      try {
+                        await removeCartItem(item.id) 
+                      } catch (err) {
+                        console.error("Failed to remove guest cart item:", err)
+                      }
+                    }}
                   className="text-red-500 hover:text-red-700 mt-2 sm:mt-3"
                 >
                   <Trash2 className="w-5 h-5 inline" />
