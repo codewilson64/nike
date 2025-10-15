@@ -14,16 +14,12 @@ type CheckoutProps = {
     quantity: number
     price: number
   }[]
+  subtotal: number
+  delivery: number
+  total: number
 }
 
-export default function CartTotals({ items }: CheckoutProps) {
-  const { cart } = useCartStore()
-
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity, 0)
-  const delivery = 2
-  const total = subtotal + delivery
-
+export default function CartTotals({ items, subtotal, delivery, total }: CheckoutProps) {
   return (
     <div className="lg:col-span-2 bg-white shadow-sm ring-1 ring-gray-100 rounded-2xl p-6 h-fit sticky top-4">
         <h2 className="text-lg font-semibold mb-6">Summary</h2>

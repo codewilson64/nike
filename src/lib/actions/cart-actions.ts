@@ -193,7 +193,11 @@ export const getGuestCartItems = async () => {
             include: {
               variant: {
                 include: {
-                  product: true,
+                  product: {
+                    include: {
+                      category: true
+                    },
+                  },
                   color: true,
                   size: true,
                 },
@@ -212,15 +216,22 @@ export const getGuestCartItems = async () => {
   const items = guest.carts[0].items.map((item) => ({
     id: item.id,
     quantity: item.quantity,
-    price: Number(item.variant.salePrice) ?? item.variant.price,
+    price: item.variant.salePrice ? Number(item.variant.salePrice) : Number(item.variant.price),
     name: item.variant.product.name,
-    category: item.variant.product.categoryId,
+    category: item.variant.product.category.name || 'Uncategorized',
     size: item.variant.size.name,
     color: item.variant.color.name,
     image: item.variant.imageUrl || '/placeholder.png',
   }))
 
-  return { ok: true, items }
+  // Calculate totals
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const delivery = 2 
+  const total = subtotal + delivery
+
+  return { ok: true, items, subtotal, delivery, total }
 }
+
+
 
 

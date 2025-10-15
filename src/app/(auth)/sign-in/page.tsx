@@ -24,19 +24,6 @@ export default function SignInPage() {
       try {
         const response = await signIn(email, password)
         if(response.user) {
-          const guestData = JSON.parse(localStorage.getItem('guest-cart') || '{}')
-          const guestCartItems = guestData?.state?.cart || []
-          
-          if (guestCartItems.length > 0) {
-            // map your guest items into backend-compatible format
-            const formattedCart = guestCartItems.map((item: GuestCartItem) => ({
-              productVariantId: item.id, // assuming your localStorage id matches ProductVariant id
-              quantity: item.quantity,
-            }))
-          
-            await syncGuestCart(formattedCart)
-            localStorage.removeItem('guest-cart')
-          }
           router.push('/')
         }
       } catch (error) {
