@@ -2,17 +2,8 @@
 
 import { useState } from 'react'
 import Link from "next/link";
-import { signUp } from 'lib/actions/auth-actions';
+import { migrateGuestToUser, signUp } from 'lib/actions/auth-actions';
 import { useRouter } from 'next/navigation';
-import { syncGuestCart } from 'lib/actions/cart-actions';
-
-type GuestCartItem = {
-  id: string             
-  name: string            
-  price: number          
-  size: string             
-  quantity: number      
-}
 
 export default function SignUpPage() {
   const [name, setName] = useState('')
@@ -26,19 +17,7 @@ export default function SignUpPage() {
       const response = await signUp(name, email, password)
 
       if(response.user) {
-        const guestData = JSON.parse(localStorage.getItem('guest-cart') || '{}')
-        const guestCartItems = guestData?.state?.cart || []
-
-        if (guestCartItems.length > 0) {
-          // map your guest items into backend-compatible format
-          const formattedCart = guestCartItems.map((item: GuestCartItem) => ({
-            productVariantId: item.id, // assuming your localStorage id matches ProductVariant id
-            quantity: item.quantity,
-          }))
-
-          await syncGuestCart(formattedCart)
-          localStorage.removeItem('guest-cart')
-        }
+        await migrateGuestToUser()
         router.push('/')
       }
     } catch (error) {

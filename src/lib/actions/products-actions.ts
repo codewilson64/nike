@@ -18,7 +18,7 @@ export async function fetchAllProducts() {
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' },
     })
     console.log(products)
 

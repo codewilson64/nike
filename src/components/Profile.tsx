@@ -2,12 +2,23 @@
 
 import { useState } from 'react'
 import { User, Package, ShoppingBag, LogOut, Trash2 } from 'lucide-react'
-import Orders from './orders'
+import Orders from './Orders'
+import { useCartStore } from 'app/zustand/useCartStore'
+import { useRouter } from 'next/navigation'
 
 type Logout = () => Promise<void>
 
 export default function ProfilePage({ logout }: { logout: Logout }) {
   const [activeTab, setActiveTab] = useState('info')
+  const router = useRouter()
+  const clearCart = useCartStore((state) => state.clearCart)
+
+  const handleLogout = async () => {
+    await logout() 
+    clearCart() 
+    router.push('/')
+    router.refresh()
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center py-10 px-4">
@@ -53,7 +64,7 @@ export default function ProfilePage({ logout }: { logout: Logout }) {
             </button>
 
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="flex items-center gap-2 py-2 px-3 rounded-md text-sm font-medium text-red-500 hover:bg-red-50 transition"
             >
               <LogOut size={18} /> <span className="hidden sm:inline">Logout</span>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { Menu, X, Search, ShoppingCart, CircleUserRound, LogOut } from "lucide-react";
+import { Menu, X, Search, ShoppingCart, CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "app/zustand/useCartStore";
 
@@ -22,7 +22,11 @@ type User = {
   image?: string | null
 } | null
 
-export default function Navbar({ user }: { user: User }) {
+type CartData = {
+  quantity: number
+}
+
+export default function Navbar({ user, items }: { user: User, items: CartData }) {
   const [isOpen, setIsOpen] = useState(false);
   // Access cart items from Zustand
   const cart = useCartStore((state) => state.cart)
@@ -67,9 +71,9 @@ export default function Navbar({ user }: { user: User }) {
             <Link href={'/cart'}>
               <button className="flex items-center gap-1 hover:text-light-100">
                 <ShoppingCart className="w-4 h-4" />
-                  {totalQuantity > 0 && (
+                  {items.quantity > 0 && (
                   <span className="text-light-100">
-                    ({totalQuantity})
+                    ({items.quantity})
                   </span>
                 )}
               </button>

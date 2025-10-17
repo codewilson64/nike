@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware'
 
 type CartItem = {
   id: string
+  productVariantId: string
   name: string
   category: string
   size: string
@@ -56,8 +57,9 @@ export const useCartStore = create<CartStore>()(persist((set, get) => ({
       decreaseQuantity: (id) =>
         set({
           cart: get()
-            .cart.map((i) =>
-              i.id === id ? { ...i, quantity: Math.max(1, i.quantity - 1) } : i
+            .cart
+            .map((i) =>
+              i.id === id ? { ...i, quantity: i.quantity - 1 } : i
             )
             .filter((i) => i.quantity > 0),
         }),

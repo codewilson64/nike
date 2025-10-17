@@ -243,6 +243,7 @@ model CartItem {
   cartId           String   @db.Uuid
   productVariantId String   @db.Uuid
   quantity         Int      @default(1)
+  createdAt        DateTime @default(now())
 
   cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
   variant ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Restrict)
@@ -257,12 +258,15 @@ model Address {
   id         String      @id @default(uuid()) @db.Uuid
   userId     String      @db.Uuid
   type       AddressType
+  firstName  String
+  lastName   String
   line1      String
   line2      String?
   city       String
   state      String
   country    String
   postalCode String
+  phone      Int
   isDefault  Boolean     @default(false)
 
   user           User @relation(fields: [userId], references: [id], onDelete: Cascade)

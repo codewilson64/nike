@@ -3,6 +3,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useCartStore } from 'app/zustand/useCartStore'
+import { createGuestSession, checkGuestSession, getCurrentUser } from 'lib/actions/auth-actions'
+import { addGuestCartItem, addUserCartItem } from 'lib/actions/cart-actions'
 
 type ProductDetailProps = {
   id: string
@@ -38,17 +40,33 @@ export default function ProductDetail({
 
   const addToCart = useCartStore((state) => state.addToCart)
 
-  const handleAddToCart = () => {
+  // check or create guest session
+  const checkOrCreateGuestSession = async () => {
+    const data = await checkGuestSession();
+
+    if (data?.sessionToken) {
+      console.log("Guest session exists", data)
+      return data.sessionToken
+    }
+
+    if (!data.sessionToken) {
+      console.log("Guest session does not exist, creating guest session token")
+      const newData = await createGuestSession();
+      return newData.sessionToken;
+    }
+  }
+
+  // add to cart
+  const handleAddToCart = async () => {
     if (!selectedSize) return
-    addToCart({
-      id: selectedVariant.id,
-      name,
-      category,
-      size: selectedSize,
-      quantity: 1,
-      price: selectedVariant.salePrice ?? selectedVariant.price,
-      image: selectedVariant.imageUrl,
-    })
+    const user = await getCurrentUser()
+
+    if(user?.id) {
+      await addUserCartItem(selectedVariant.id, 1)
+    } else {
+      await checkOrCreateGuestSession();
+      await addGuestCartItem(selectedVariant.id, 1)
+    }
   }
 
   const handleColorSelect = (variantId: string) => {
@@ -61,6 +79,14 @@ export default function ProductDetail({
 
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size)
+    
+    const matchingVariant = variants.find(
+    (v) => v.color === selectedVariant.color && v.size === size
+  )
+    if (matchingVariant) {
+      setSelectedVariant(matchingVariant)
+      setMainImage(matchingVariant.imageUrl)
+    }
   }
 
   return (
