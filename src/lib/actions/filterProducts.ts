@@ -4,15 +4,13 @@ import { Prisma, PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-export async function filterProducts({
-  gender,
-  size,
-  sortBy, 
-}: {
-  gender?: string
-  size?: string
+type FilterTypeProps = {
+  gender?: string,
+  size?: string,
   sortBy?: 'highest' | 'lowest' | ''
-}) {
+}
+
+export async function filterProducts({ gender, size, sortBy }: FilterTypeProps){
   const where: Prisma.ProductWhereInput = {
     isPublished: true,
   }

@@ -1,8 +1,6 @@
 'use client'
 
-import { useCartStore } from 'app/zustand/useCartStore'
 import Image from 'next/image'
-import Link from 'next/link'
 
 type CheckoutProps = {
   items: {
@@ -45,7 +43,7 @@ export default function CartTotals({ items, subtotal, delivery, total }: Checkou
                   <p className="font-medium">{item.name}</p>
                   <p className="text-gray-500 text-sm">Size: {item.size}</p>
                   <p className="text-gray-500 text-sm">Color: {item.color}</p>
-                  <p className="text-sm text-gray-600">Quantity: x {item.quantity}</p>
+                  <p className="text-sm text-gray-500">Quantity: x {item.quantity}</p>
                 </div>
               </div>
               <p>
@@ -71,12 +69,6 @@ export default function CartTotals({ items, subtotal, delivery, total }: Checkou
           <span>Total</span>
           <span>${total.toFixed(2)}</span>
         </div>
-
-        <Link href={'/checkouts'}>
-          <button className="mt-6 w-full bg-black text-white py-3 rounded-full hover:bg-gray-900 transition text-sm sm:text-base">
-            Proceed to Checkout
-          </button>
-        </Link>
       </div>
   )
 }

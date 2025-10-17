@@ -243,6 +243,7 @@ model CartItem {
   cartId           String   @db.Uuid
   productVariantId String   @db.Uuid
   quantity         Int      @default(1)
+  createdAt        DateTime @default(now())
 
   cart    Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
   variant ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Restrict)

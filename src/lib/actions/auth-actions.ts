@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { auth } from '../auth'
 import { cookies, headers } from 'next/headers'
 import { randomUUID } from 'crypto'
@@ -189,6 +188,10 @@ export const getCurrentUser = async () => {
 
 // sign out
 export const signOut = async () => {
-  await auth.api.signOut({headers: await headers()})
-  redirect('/')
+  try {
+    await auth.api.signOut({headers: await headers()})
+    await createGuestSession()
+  } catch (e) {
+    console.log("Log out failed", e)
+  }
 }

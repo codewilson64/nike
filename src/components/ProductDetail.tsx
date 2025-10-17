@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import { useCartStore } from 'app/zustand/useCartStore'
-import { createGuestSession, checkGuestSession } from 'lib/actions/auth-actions'
-import { addGuestCartItem } from 'lib/actions/cart-actions'
+import { createGuestSession, checkGuestSession, getCurrentUser } from 'lib/actions/auth-actions'
+import { addGuestCartItem, addUserCartItem } from 'lib/actions/cart-actions'
 
 type ProductDetailProps = {
   id: string
@@ -40,7 +40,8 @@ export default function ProductDetail({
 
   const addToCart = useCartStore((state) => state.addToCart)
 
-  async function checkOrCreateGuestSession() {
+  // check or create guest session
+  const checkOrCreateGuestSession = async () => {
     const data = await checkGuestSession();
 
     if (data?.sessionToken) {
@@ -55,20 +56,17 @@ export default function ProductDetail({
     }
   }
 
+  // add to cart
   const handleAddToCart = async () => {
     if (!selectedSize) return
-    await checkOrCreateGuestSession();
-    await addGuestCartItem(selectedVariant.id, 1)
+    const user = await getCurrentUser()
 
-    addToCart({
-      id: selectedVariant.id,
-      name,
-      category,
-      size: selectedSize,
-      quantity: 1,
-      price: selectedVariant.salePrice ?? selectedVariant.price,
-      image: selectedVariant.imageUrl,
-    })
+    if(user?.id) {
+      await addUserCartItem(selectedVariant.id, 1)
+    } else {
+      await checkOrCreateGuestSession();
+      await addGuestCartItem(selectedVariant.id, 1)
+    }
   }
 
   const handleColorSelect = (variantId: string) => {

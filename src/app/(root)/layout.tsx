@@ -1,6 +1,7 @@
 import Footer from "components/Footer";
 import Navbar from "components/Navbar";
-import { getCurrentUser, signOut } from "lib/actions/auth-actions";
+import { getCurrentUser } from "lib/actions/auth-actions";
+import { getGuestCartItems, getUserCartItems } from "lib/actions/cart-actions";
 
 export default async function RootLayout({
   children,
@@ -8,10 +9,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getCurrentUser()
+  const cartData = user?.id ? await getUserCartItems() : await getGuestCartItems()
+  const quantity = cartData.items?.reduce((sum, item) => sum + item.quantity, 0) || 0
 
   return (
     <>
-    <Navbar user={user} logout={signOut}/>
+    <Navbar user={user} items={{ quantity }}/>
       {children}
     <Footer />
     </>

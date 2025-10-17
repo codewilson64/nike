@@ -3,30 +3,29 @@
 import Image from 'next/image'
 import { Trash2, Minus, Plus } from 'lucide-react'
 import { useCartStore } from 'app/zustand/useCartStore'
-import { addGuestCartItem, decreaseGuestCartItem, removeCartItem } from 'lib/actions/cart-actions'
+import { addGuestCartItem, addUserCartItem, decreaseGuestCartItem, decreaseUserCartItem, removeGuestCartItem, removeUserCartItem } from 'lib/actions/cart-actions'
 import Link from 'next/link'
+import { getCurrentUser } from 'lib/actions/auth-actions'
 
-type CheckItemsProps = {
+type CartItemsProps = {
   items: {
     id: string
+    productVariantId: string
     name: string
     image: string
-    category: string
     size: string
+    color: string
+    category: string
     quantity: number
     price: number
   }[]
+  subtotal: number
+  delivery: number
+  total: number
 }
 
-export default function CartItems({ items }: CheckItemsProps) {
-  const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCartStore()
-
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity, 0)
-  const delivery = 2
-  const total = subtotal + delivery
-
-  console.log("Cart: ",cart)
+export default function CartItems({ items, subtotal, delivery, total }: CartItemsProps) {
+  const { removeFromCart, increaseQuantity, decreaseQuantity } = useCartStore()
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-10">
@@ -34,10 +33,10 @@ export default function CartItems({ items }: CheckItemsProps) {
       <div className="lg:col-span-2 space-y-8">
         <h2 className="text-heading-3 text-dark-900 mb-4">Your bag</h2>
 
-        {cart.length === 0 ? (
+        {items.length === 0 ? (
           <p className="text-gray-500 text-center py-10">Your cart is empty.</p>
         ) : (
-          cart.map((item) => (
+          items.map((item) => (
             <div
               key={item.id + item.size}
               className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b pb-4"
@@ -61,9 +60,14 @@ export default function CartItems({ items }: CheckItemsProps) {
                   <div className="flex items-center gap-3 mt-3 border rounded-full w-fit px-3 py-1">
                     <button
                       onClick={async () => {
-                        decreaseQuantity(item.id)
+                        decreaseQuantity(item.productVariantId)
                         try {
-                          await decreaseGuestCartItem(item.id)
+                          const user = await getCurrentUser()
+                          if(user?.id) {
+                            await decreaseUserCartItem(item.productVariantId)
+                          } else {
+                            await decreaseGuestCartItem(item.productVariantId)
+                          }
                         } catch (err) {
                           console.error("Failed to decrease guest cart:", err)
                         }
@@ -75,9 +79,14 @@ export default function CartItems({ items }: CheckItemsProps) {
                     <span className="text-sm">{item.quantity}</span>
                     <button
                       onClick={async () => {
-                        increaseQuantity(item.id) 
+                        increaseQuantity(item.productVariantId) 
                         try {
-                          await addGuestCartItem(item.id, 1) 
+                          const user = await getCurrentUser()
+                          if(user?.id) {
+                            await addUserCartItem(item.productVariantId, 1)
+                          } else {
+                            await addGuestCartItem(item.productVariantId, 1) 
+                          }
                         } catch (err) {
                           console.error("Failed to update guest cart:", err)
                         }
@@ -97,11 +106,16 @@ export default function CartItems({ items }: CheckItemsProps) {
                 </p>
                 <button
                   onClick={async () => {
-                    removeFromCart(item.id) 
+                    removeFromCart(item.productVariantId) 
                       try {
-                        await removeCartItem(item.id) 
+                        const user = await getCurrentUser()
+                        if(user?.id) {
+                          await removeUserCartItem(item.productVariantId)
+                        } else {
+                          await removeGuestCartItem(item.productVariantId) 
+                        }
                       } catch (err) {
-                        console.error("Failed to remove guest cart item:", err)
+                        console.error("Failed to remove cart item:", err)
                       }
                     }}
                   className="text-red-500 hover:text-red-700 mt-2 sm:mt-3"

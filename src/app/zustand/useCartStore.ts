@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware'
 
 type CartItem = {
   id: string
+  productVariantId: string
   name: string
   category: string
   size: string

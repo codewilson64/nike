@@ -1,9 +1,12 @@
 import CartTotals from 'components/CartTotals'
 import DeliveryForm from 'components/DeliveryForm'
-import { getGuestCartItems } from 'lib/actions/cart-actions'
+import { getCurrentUser } from 'lib/actions/auth-actions'
+import { getGuestCartItems, getUserCartItems } from 'lib/actions/cart-actions'
 
 export default async function CheckoutDeliveryPage() {
-  const { items, subtotal, delivery, total } = await getGuestCartItems()
+  const user = await getCurrentUser()
+  const cartData = user?.id ? await getUserCartItems() : await getGuestCartItems()
+  const { items, subtotal = 0, delivery = 0, total = 0 } = cartData
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-10">
