@@ -10,7 +10,7 @@ export default async function RootLayout({
 }>) {
   const user = await getCurrentUser()
   const cartData = user?.id ? await getUserCartItems() : await getGuestCartItems()
-  const quantity = cartData.items?.reduce((sum: number, item) => sum + item.quantity, 0) || 0
+  const quantity = cartData.items?.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0) || 0
 
   return (
     <>
