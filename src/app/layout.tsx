@@ -10,7 +10,7 @@ const jost = Jost({
 
 export const metadata: Metadata = {
   title: "Step Fuel",
-  description: "An ecommerce platform for shoes",
+  description: "ecommerce platform",
 };
 
 export default function RootLayout({
