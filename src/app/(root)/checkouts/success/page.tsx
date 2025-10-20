@@ -1,6 +1,8 @@
 import { Suspense } from "react"
 
-export default function SuccessPage({ searchParams }: { searchParams: { order_id?: string } }) {
+export default async function SuccessPage({ params }: { params: Promise<{ order_id?: string }> }) {
+  const { order_id } = await params
+  
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
@@ -9,7 +11,7 @@ export default function SuccessPage({ searchParams }: { searchParams: { order_id
           <p className="mt-2 text-gray-700">
             Thank you for your payment! Your order has been successfully processed.
           </p>
-          <p className="mt-4 text-sm text-gray-500">Order ID: {searchParams.order_id}</p>
+          <p className="mt-4 text-sm text-gray-500">Order ID: {order_id}</p>
 
           <a
             href="/orders"
