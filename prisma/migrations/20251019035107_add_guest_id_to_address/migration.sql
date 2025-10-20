@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Address" ADD COLUMN     "guestId" UUID,
+ALTER COLUMN "userId" DROP NOT NULL,
+ALTER COLUMN "phone" SET DATA TYPE TEXT;
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_guestId_fkey" FOREIGN KEY ("guestId") REFERENCES "Guest"("id") ON DELETE CASCADE ON UPDATE CASCADE;

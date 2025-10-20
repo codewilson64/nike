@@ -77,7 +77,8 @@ model Guest {
   createdAt    DateTime @default(now())
   expiresAt    DateTime
 
-  carts Cart[]
+  carts        Cart[]
+  addresses    Address[]
 }
 
 // Products Schemas
@@ -192,16 +193,20 @@ model Wishlist {
 }
 
 enum OrderStatus {
-  pending
-  paid
-  shipped
-  delivered
-  cancelled
+  pending        // Created but not paid yet
+  paid           // Payment settled (Midtrans "settlement")
+  processing     // Payment done, preparing shipment
+  shipped        // Order has been shipped
+  delivered      // Customer received the package
+  cancelled      // Cancelled before payment or manually
+  failed         // Payment failed or expired
 }
+
 
 model Order {
   id                String      @id @default(uuid()) @db.Uuid
   userId            String?     @db.Uuid
+  guestId           String?     @db.Uuid
   status            OrderStatus @default(pending)
   totalAmount       Decimal     @db.Decimal(10, 2)
   shippingAddressId String?     @db.Uuid
@@ -256,7 +261,8 @@ enum AddressType {
 
 model Address {
   id         String      @id @default(uuid()) @db.Uuid
-  userId     String      @db.Uuid
+  userId     String?     @db.Uuid        // optional for guests
+  guestId    String?     @db.Uuid        // added for guests
   type       AddressType
   firstName  String
   lastName   String
@@ -266,13 +272,15 @@ model Address {
   state      String
   country    String
   postalCode String
-  phone      Int
+  phone      String       // change from Int to String (to handle "+62", "0812...", etc.)
   isDefault  Boolean     @default(false)
 
-  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guest          Guest? @relation(fields: [guestId], references: [id], onDelete: Cascade)
   shippingOrders Order[] @relation("ShippingAddress")
   billingOrders  Order[] @relation("BillingAddress")
 }
+
 
 enum PaymentMethod {
   stripe
