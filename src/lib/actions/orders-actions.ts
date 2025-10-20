@@ -7,8 +7,6 @@ import midtransClient from "midtrans-client"
 
 const prisma = new PrismaClient()
 
-const DELIVERY_FEE = 2.00;
-
 export async function createOrderCheckout(addressId: string) {
   const user = await getCurrentUser()
   const cookieStore = await cookies()
@@ -70,9 +68,13 @@ export async function createOrderCheckout(addressId: string) {
     throw new Error("Cart is empty")
   }
 
-  const totalAmount = cart.items.reduce(
-    (sum, item) => sum + Number(item.variant.salePrice ?? item.variant.price,) * item.quantity,
-    0 ) + DELIVERY_FEE;
+  const subTotal = cart.items.reduce(
+    (sum, item) => sum + Math.round(Number(item.variant.salePrice ?? item.variant.price)) * item.quantity,
+    0 )
+
+  const DELIVERY_FEE = 2;
+
+  const totalAmount = subTotal + DELIVERY_FEE
 
   // 3️⃣ Create the Order
   const order = await prisma.order.create({
@@ -130,7 +132,7 @@ export async function createOrderCheckout(addressId: string) {
   const parameter = {
     transaction_details: {
       order_id: order.id,
-      gross_amount: Math.round(Number(order.totalAmount)),
+      gross_amount: totalAmount,
     },
     item_details: itemDetails,
     customer_details: {
