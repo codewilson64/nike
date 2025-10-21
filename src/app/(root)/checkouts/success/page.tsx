@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Suspense } from "react"
 
 export default async function SuccessPage({ params }: { params: Promise<{ order_id?: string }> }) {
@@ -11,14 +12,20 @@ export default async function SuccessPage({ params }: { params: Promise<{ order_
           <p className="mt-2 text-gray-700">
             Thank you for your payment! Your order has been successfully processed.
           </p>
-          <p className="mt-4 text-sm text-gray-500">Order ID: {order_id}</p>
-
-          <a
-            href="/orders"
-            className="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
-          >
-            View My Orders
-          </a>
+            <div className="mt-6 flex flex-col gap-3">
+              <Link
+                href="/orders"
+                className="block w-full bg-emerald-500 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-all text-center"
+              >
+                View My Orders
+              </Link>
+              <Link
+                href="/"
+                className="block w-full bg-dark-900 text-white px-6 py-3 rounded-lg hover:bg-dark-800 transition-all text-center"
+              >
+                Continue Shopping
+              </Link>             
+          </div>
         </div>
       </div>
     </Suspense>

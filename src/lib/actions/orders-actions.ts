@@ -138,7 +138,7 @@ export async function createOrderCheckout(addressId: string) {
     customer_details: {
       first_name: address.firstName,
       last_name: address.lastName,
-      email: user?.email ?? "guest@example.com",
+      email: address.email ?? "guest@example.com",
       phone: address.phone,
       shipping_address: {
         first_name: address.firstName,
@@ -155,10 +155,20 @@ export async function createOrderCheckout(addressId: string) {
   // 6️⃣ Create Snap transaction
   const transaction = await snap.createTransaction(parameter)
 
+  const payment = await prisma.payment.create({
+    data: {
+      orderId: order.id,
+      method: 'pending', // will get updated by midtrans webhook
+      provider: 'midtrans',
+    },
+  })
+
+
   // 7️⃣ Return order + Snap info to frontend
   return {
     success: true,
     orderId: order.id,
+    paymentId: payment.id,
     snapToken: transaction.token,
     snapUrl: transaction.redirect_url,
     totalAmount: Number(order.totalAmount),

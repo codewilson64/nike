@@ -7,6 +7,7 @@ import { getCurrentUser } from "./auth-actions"
 const prisma = new PrismaClient()
 
 type AddressFormData = {
+  email: string,
   type: string
   firstName: string
   lastName: string
